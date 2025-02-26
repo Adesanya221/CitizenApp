@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CitizenWatch</title>
+    <meta name="description" content="Citizen incident reporting system" />
+    <link rel="stylesheet" href="/citizen.css">
+    <link rel="stylesheet" href="/src/App.css">
+  </head>
+  <body>
+    <div class="min-h-screen bg-background text-foreground">
+      <!-- Header -->
+      <header class="fixed top-0 w-full bg-background/80 backdrop-blur-sm border-b z-50">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+          <a href="/citizen.html" class="text-xl font-semibold no-underline">CitizenWatch</a>
+          <div class="flex items-center gap-4">
+            <button class="btn btn-ghost btn-icon" aria-label="Menu">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+            </button>
+            <button class="btn btn-primary" aria-label="Report Incident">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8"></path><path d="M8 12h8"></path></svg>
+              Report Incident
+            </button>
+          </div>
+          
+        <!--
+          <div class="flex items-center gap-8 ml-auto">
+            <button class="btn btn-auth login-btn" id="login-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10 17 15 12 10 7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
+              </svg>
+              Login
+            </button>
+            <button class="btn btn-auth register-btn" id="register-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <line x1="19" y1="8" x2="19" y2="14"/>
+                <line x1="16" y1="11" x2="22" y2="11"/>
+              </svg>
+              Register
+            </button>
+          </div>
+          -->
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="container mx-auto px-4 pt-24 pb-16">
+        <!-- Filters -->
+        <div class="flex items-center gap-4 mb-8" role="tablist">
+          <button class="btn btn-outline rounded-full" aria-selected="true" role="tab">All Incidents</button>
+          <button class="btn btn-outline rounded-full text-incident-accident" role="tab">Accidents</button>
+          <button class="btn btn-outline rounded-full text-incident-fight" role="tab">Fights</button>
+          <button class="btn btn-outline rounded-full text-incident-riot" role="tab">Riots</button>
+        </div>
+
+        <!-- Incident Feed -->
+        <div id="incident-feed" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <!-- Incidents will be dynamically inserted here -->
+        </div>
+
+        <!-- Report Section -->
+        <section class="report-section">
+          <h2 class="section-title">Report an Incident</h2>
+          <form id="report-form" class="report-form" novalidate>
+            <div class="input-group">
+              <label for="incident-type">Incident Type</label>
+              <select id="incident-type" required aria-required="true">
+                <option value="">Select type</option>
+                <option value="accident">Accident</option>
+                <option value="fight">Fight</option>
+                <option value="riot">Riot</option>
+              </select>
+              <div class="error-message" aria-live="assertive" aria-atomic="true"></div>
+            </div>
+            
+            <div class="input-group">
+              <label for="incident-title">Title</label>
+              <input type="text" id="incident-title" placeholder="Brief description of the incident" required aria-required="true">
+              <div class="error-message" aria-live="assertive" aria-atomic="true"></div>
+            </div>
+            
+            <div class="input-group">
+              <label for="incident-description">Description</label>
+              <textarea id="incident-description" placeholder="Detailed description of what happened" rows="4" required aria-required="true"></textarea>
+              <div class="error-message" aria-live="assertive" aria-atomic="true"></div>
+            </div>
+            
+            <div class="input-group">
+              <label for="incident-images">Images</label>
+              <input type="file" id="incident-images" accept="image/*" multiple>
+              <div class="error-message" aria-live="assertive" aria-atomic="true"></div>
+            </div>
+            
+            <div class="input-group">
+              <label for="incident-location">Location</label>
+              <input type="text" id="incident-location" placeholder="Where did it happen?" required>
+              <button type="button" id="get-location" class="btn btn-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Use My Location
+              </button>
+              <input type="hidden" id="latitude">
+              <input type="hidden" id="longitude">
+              <div class="error-message" aria-live="assertive" aria-atomic="true"></div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary submit-report" aria-label="Submit Report">
+              Submit Report
+            </button>
+          </form>
+        </section>
+      </main>
+
+      <!-- Mobile Action Button -->
+      <div class="fixed bottom-4 right-4 md:hidden">
+        <button class="btn btn-lg rounded-full shadow-lg" aria-label="Report">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8"></path><path d="M8 12h8"></path></svg>
+          Report
+        </button>
+      </div>
+    </div>
+
+    <!-- Add Firebase SDK before your app scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    
+    <!-- Initialize Firebase -->
+    <script src="/firebase-config.js"></script>
+    
+    <!-- Add app.js before citizen.js -->
+    <script src="/src/app.js"></script>
+    <script src="/citizen.js"></script>
+  </body>
+</html>
